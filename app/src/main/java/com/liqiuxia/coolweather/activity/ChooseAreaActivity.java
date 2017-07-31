@@ -1,6 +1,9 @@
 package com.liqiuxia.coolweather.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -56,6 +59,13 @@ public class ChooseAreaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.choose_area);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean("city_selected",false)){
+            Intent intent = new Intent(this,WeatherActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
         listView = (ListView) findViewById(R.id.list_view);
         titleText = (TextView)findViewById(R.id.title_text);
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,dataList);
@@ -69,6 +79,13 @@ public class ChooseAreaActivity extends AppCompatActivity {
                     queryCities();
                 }else if (currentLevel == LEVEL_CITY){
                     selectedCity = cityList.get(i);
+                    queryCounties();
+                }else if (currentLevel == LEVEL_COUNTY){
+                    String countyCode = cityList.get(i).getCityCode();
+                    Intent intent = new Intent(ChooseAreaActivity.this,WeatherActivity.class);
+                    intent.putExtra("coundty_code",countyCode);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
