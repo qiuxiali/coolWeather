@@ -143,5 +143,5 @@ public class CoolWheatherDB {
         }
         return list;
     }
-    
+
 }
